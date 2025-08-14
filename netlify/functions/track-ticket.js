@@ -1,41 +1,30 @@
-import { getStore } from '@netlify/blobs';
+import fetch from 'node-fetch';
 
-const ok = (body, status=200)=>({
-  statusCode: status,
-  headers: {
-    'Content-Type': 'application/json; charset=utf-8',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-  },
-  body: JSON.stringify(body)
-});
+export async function handler(event) {
+  const { GH_TOKEN, GH_OWNER, GH_REPO, GH_BRANCH, GH_PATH_TICKETS } = process.env;
 
-export async function handler(event){
-  if (event.httpMethod === 'OPTIONS') return ok({ok:true});
-  let params = {};
-  if (event.httpMethod === 'GET') params = event.queryStringParameters || {};
-  else { try{ params = JSON.parse(event.body||'{}'); } catch { params = {}; } }
-
-  const id = (params.id||'').trim();
-  const phone = (params.phone||'').replace(/\D/g,''); // chiffres
-  if(!id || phone.length < 4) return ok({error:'missing_params'}, 400);
-
-  try{
-    const store = getStore('tickets');
-    const list = await store.get('all', { type: 'json' }) || [];
-    const match = list.find(t => String(t.id)===id && (String(t.phone||'').replace(/\D/g,'').endsWith(phone.slice(-4))));
-    if(!match) return ok({error:'not_found'}, 404);
-
-    const pub = {
-      id: match.id,
-      status: match.status || 'En cours',
-      device: match.device || match.model || '—',
-      updated_at: match.updated_at || match.updatedAt || null,
-      note: match.public_note || null
-    };
-    return ok({ticket: pub});
-  }catch(e){
-    return ok({error:String(e)}, 500);
+  const ticketId = event.queryStringParameters.id;
+  if (!ticketId) {
+    return { statusCode: 400, body: 'ID requis' };
   }
+
+  const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH_TICKETS}?ref=${GH_BRANCH}`;
+
+  const res = await fetch(url, {
+    headers: { Authorization: `token ${GH_TOKEN}` }
+  });
+
+  if (res.status !== 200) {
+    return { statusCode: res.status, body: 'Impossible de récupérer les données' };
+  }
+
+  const data = await res.json();
+  const tickets = JSON.parse(Buffer.from(data.content, 'base64').toString());
+
+  const ticket = tickets.find(t => t.id === ticketId);
+  if (!ticket) {
+    return { statusCode: 404, body: 'Ticket introuvable' };
+  }
+
+  return { statusCode: 200, body: JSON.stringify(ticket) };
 }
