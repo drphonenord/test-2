@@ -13,10 +13,7 @@ export async function handler() {
   });
 
   if (res.status === 404) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify([])
-    };
+    return { statusCode: 200, body: JSON.stringify([]) };
   }
 
   const data = await res.json();
