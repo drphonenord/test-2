@@ -106,5 +106,29 @@
       if(h){ $('code').value=h; run(); }
     })();
   </script>
+
+<div class="card" style="max-width:700px;margin:16px auto">
+  <h3>Suivi de réparation</h3>
+  <div class="grid" style="grid-template-columns:1fr 1fr; gap:8px">
+    <input id="t_id" placeholder="N° de ticket (ex: 1234)" />
+    <input id="t_phone" placeholder="Derniers 4 chiffres du téléphone" inputmode="numeric" />
+  </div>
+  <button class="btn" id="t_btn" style="margin-top:8px">Voir le statut</button>
+  <div id="t_res" class="muted" style="margin-top:8px"></div>
+</div>
+<script>
+document.getElementById('t_btn').onclick = async ()=>{
+  const id = document.getElementById('t_id').value.trim();
+  const phone = document.getElementById('t_phone').value.trim();
+  if(!id || !phone) return alert('Remplis les deux champs.');
+  const r = await fetch(`/.netlify/functions/track-ticket?id=${encodeURIComponent(id)}&phone=${encodeURIComponent(phone)}`);
+  const j = await r.json();
+  const box = document.getElementById('t_res');
+  if(!r.ok){ box.textContent = j.error==='not_found' ? 'Ticket introuvable.' : 'Erreur serveur.'; return; }
+  const t = j.ticket;
+  box.innerHTML = `<b>Statut :</b> ${t.status}<br><b>Appareil :</b> ${t.device}<br><b>Maj :</b> ${t.updated_at || '—'}${t.note?('<br><b>Note :</b> '+t.note):''}`;
+};
+</script>
+
 </body>
 </html>
