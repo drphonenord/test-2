@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ERP Admin — Dr Phone</title>
+  <link rel="stylesheet" href="/admin/style.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1>ERP Admin — Dr Phone</h1>
+    <p class="muted small">Tout au même endroit. Pense à définir <b>ADMIN_TOKEN</b> dans Netlify.</p>
+
+    <div class="card">
+      <div class="grid g3">
+        <div>
+          <label>ADMIN_TOKEN</label>
+          <input id="token" placeholder="Colle ton token ici"/>
+          <button class="btn out" id="saveToken">Enregistrer</button>
+        </div>
+        <div>
+          <label>Recherche globale</label>
+          <input id="q" placeholder="Nom client, téléphone, modèle…"/>
+        </div>
+        <div class="right" style="display:flex;align-items:end;gap:8px;justify-content:flex-end">
+          <a class="btn out" href="/admin/etats.html" target="_blank">Prix par État</a>
+          <a class="btn out" href="/admin/poster-etats.html" target="_blank">POST Helper</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <a href="#dashboard" class="active">Dashboard</a>
+      <a href="#clients">Clients</a>
+      <a href="#repairs">Réparations</a>
+      <a href="#orders">Commandes</a>
+      <a href="#history">Historique</a>
+      <a href="#config">Config</a>
+    </div>
+
+    <div id="view"></div>
+
+    <div class="footer small muted">ERP minimal — données stockées via Netlify Blobs. ⚠ Données client = confidentielles.</div>
+  </div>
+
+  <script src="/admin/erp.js"></script>
+</body>
+</html>

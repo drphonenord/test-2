@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin — Suivi réparations</title>
+  <meta name="description" content="Créer, rechercher et mettre à jour des tickets de réparation.">
+  <style>
+    :root{--fg:#0b1220;--muted:#6b7280;--border:#e5e7eb;--brand:#2563eb;--brand2:#06b6d4;--bg:#f8fafc}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--fg);background:var(--bg)}
+    .container{max-width:1000px;margin:0 auto;padding:20px 16px}
+    .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-top:16px}
+    label{display:block;font-weight:600;margin-top:8px}
+    input,select,textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:12px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    .btn{display:inline-block;border:1px solid var(--brand);background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;padding:10px 16px;border-radius:12px;text-decoration:none;font-weight:700;cursor:pointer}
+    .btn.out{background:#fff;color:var(--brand)}
+    .muted{color:var(--muted)} .small{font-size:.9rem}
+    .list{margin-top:8px}
+    .item{padding:10px;border:1px solid var(--border);border-radius:10px;margin-top:6px;background:#fff;cursor:pointer}
+    .item b{font-weight:800}
+    .flex{display:flex;gap:8px;flex-wrap:wrap}
+    .stats{display:flex;gap:16px;align-items:center;justify-content:flex-end;margin-top:8px}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;font-weight:700}
+    @media (max-width:820px){ .grid3{grid-template-columns:1fr} .row{grid-template-columns:1fr} .stats{justify-content:flex-start} }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Admin — Suivi réparations</h1>
+    <p class="muted small">Donne un code au client. Il suit l’état ici : <a href="/suivi.html">/suivi.html</a>.</p>
+
+    <!-- Bloc sécurité -->
+    <div class="card">
+      <div class="row">
+        <div>
+          <label>Clé admin (une fois pour toutes)</label>
+          <input id="token" placeholder="Colle la valeur de ADMIN_TOKEN" />
+          <button class="btn out" id="saveToken" style="margin-top:8px">Enregistrer</button>
+          <p class="muted small">À créer dans Netlify → Project configuration → Environment variables → <b>ADMIN_TOKEN</b>.</p>
+        </div>
+        <div>
+          <label>Charger un ticket par code</label>
+          <div class="flex">
+            <input id="searchCode" placeholder="DRP-2025-123" />
+            <button class="btn out" id="loadBtn">Charger</button>
+            <button class="btn out" id="listOpenBtn">Tous (ouverts)</button>
+            <button class="btn out" id="listAllBtn">Derniers (100)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recherche + stats + export -->
+    <div class="card">
+      <div class="grid3">
+        <div>
+          <label>Recherche (code, nom, modèle, statut)</label>
+          <input id="searchTxt" placeholder="Ex: Martin, iPhone 13, DRP-2025…" />
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <div class="flex">
+            <label class="small"><input type="checkbox" id="openOnly" /> Uniquement ouverts</label>
+          </div>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <div class="flex" style="justify-content:flex-end">
+            <button class="btn out" id="searchBtn">Rechercher</button>
+            <button class="btn out" id="exportBtn">Exporter CSV</button>
+          </div>
+        </div>
+      </div>
+      <div class="stats">
+        <span class="badge">Résultats: <span id="countAll">0</span></span>
+        <span class="badge">Ouverts: <span id="countOpen">0</span></span>
+      </div>
+      <div id="list" class="list"></div>
+    </div>
+
+    <!-- Formulaire ticket rapide (optionnel) -->
+    <div class="card">
+      <div class="row">
+        <div><label>Code (laisser vide pour auto)</label><input id="code" placeholder="DRP-2025-123" /></div>
+        <div><label>Statut</label>
+          <select id="status">
+            <option>Réceptionné</option>
+            <option>En diagnostic</option>
+            <option>En cours</option>
+            <option>Pièce en commande</option>
+            <option>En test</option>
+            <option>Prêt · à restituer</option>
+            <option>Restitué</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div><label>Modèle</label><input id="model" placeholder="iPhone 13 / Galaxy S21…" /></div>
+        <div><label>Client</label><input id="client" placeholder="Nom / initiales (ex. L. Martin)" /></div>
+      </div>
+      <label>Note</label><textarea id="note" rows="4" placeholder="Détails utiles…"></textarea>
+      <div class="flex" style="margin-top:10px">
+        <button class="btn" id="saveBtn">Enregistrer / Mettre à jour</button>
+        <button class="btn out" id="newBtn">Nouveau code (garde le client)</button>
+        <a class="btn out" id="linkSuivi" target="_blank">Lien suivi client</a>
+        <button class="btn out" id="printBtn">Imprimer la fiche</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const FN='/.netlify/functions/tickets';
+    const $=(id)=>document.getElementById(id);
+    let currentItems = []; // liste affichée (pour export)
+
+    // Token persistant
+    const token = localStorage.getItem('drp_admin_token') || '';
+    if(token) $('token').value = token;
+    $('saveToken').onclick = ()=>{ localStorage.setItem('drp_admin_token', $('token').value.trim()); alert('Token enregistré.'); };
+
+    // Actions rapides
+    $('loadBtn').onclick = ()=>{
+      const id = $('searchCode').value.trim();
+      if(!id) return;
+      window.open('/ticket-admin.html?code='+encodeURIComponent(id),'_blank');
+    };
+
+    function updateStats(items){
+      $('countAll').textContent = items.length;
+      const open = items.filter(it => (it.status||'') !== 'Restitué').length;
+      $('countOpen').textContent = open;
+    }
+
+    async function listTickets(query, openOnly){
+      const u = new URL(FN, location.origin);
+      if(query) u.searchParams.set('q', query);
+      if(openOnly) u.searchParams.set('open', '1');
+      const r = await fetch(u);
+      const j = await r.json();
+      const list = $('list'); list.innerHTML='';
+      currentItems = j.items || [];
+      updateStats(currentItems);
+      currentItems.forEach(it=>{
+        const d = document.createElement('div'); d.className='item';
+        d.innerHTML = `<b>${it.code||''}</b> — ${it.status||''} · <span class="muted">${it.client||'—'}</span> · ${it.model||''} <span class="muted" style="float:right">${it.updated||''}</span>`;
+        d.onclick = ()=> window.open('/ticket-admin.html?code='+encodeURIComponent(it.code||''), '_blank');
+        list.appendChild(d);
+      });
+      if(currentItems.length===0){ list.innerHTML = '<div class="muted small">Aucun résultat.</div>'; }
+    }
+
+    $('searchBtn').onclick = ()=> listTickets($('searchTxt').value.trim(), $('openOnly').checked);
+    $('listOpenBtn').onclick = ()=> listTickets('', true);
+    $('listAllBtn').onclick = ()=> listTickets('', false);
+    $('searchTxt').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); $('searchBtn').click(); } });
+
+    // Export CSV de la liste courante
+    $('exportBtn').onclick = ()=>{
+      if(!currentItems.length){ alert('Aucun résultat à exporter.'); return; }
+      const header = ['code','status','model','client','note','updated'];
+      const rows = [header.join(',')].concat(currentItems.map(it => {
+        const cells = header.map(k => {
+          const v = (it[k] ?? '').toString().replace(/"/g,'""');
+          // CSV safe: entourer de guillemets
+          return '"' + v + '"';
+        });
+        return cells.join(',');
+      }));
+      const blob = new Blob([rows.join('\n')], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const ts = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+      a.href = url; a.download = 'tickets-'+ts+'.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    };
+
+    // Formulaire rapide (en option)
+    function fillForm(item){
+      $('code').value   = item.code||'';
+      $('status').value = item.status||'Réceptionné';
+      $('model').value  = item.model||'';
+      $('client').value = item.client||'';
+      $('note').value   = item.note||'';
+      $('linkSuivi').href = '/suivi.html#'+ encodeURIComponent(item.code||'');
+      $('linkSuivi').textContent = 'Lien suivi client ('+(item.code||'')+')';
+    }
+
+    $('newBtn').onclick = async ()=>{
+      const t = localStorage.getItem('drp_admin_token') || $('token').value.trim();
+      if(!t){ alert('Renseigne ton token admin.'); return; }
+      const payload = { status:'Réceptionné', model:$('model').value.trim(), client:$('client').value.trim(), note:'' };
+      const r = await fetch(FN, { method:'POST', headers:{'Content-Type':'application/json','x-admin-token':t}, body:JSON.stringify(payload) });
+      const j = await r.json();
+      if(!r.ok || !j.ok){ alert('Erreur: '+(j.error||r.status)); return; }
+      window.open('/ticket-admin.html?code='+encodeURIComponent(j.item.code||''), '_blank');
+    };
+
+    $('saveBtn').onclick = async ()=>{
+      const t = localStorage.getItem('drp_admin_token') || $('token').value.trim();
+      if(!t){ alert('Renseigne ton token admin.'); return; }
+      const payload = {
+        code:$('code').value.trim(),
+        status:$('status').value,
+        model:$('model').value.trim(),
+        client:$('client').value.trim(),
+        note:$('note').value.trim(),
+      };
+      const r = await fetch(FN, { method:'POST', headers:{'Content-Type':'application/json','x-admin-token':t}, body:JSON.stringify(payload) });
+      const j = await r.json();
+      if(!r.ok || !j.ok){ alert('Erreur: '+(j.error||r.status)); return; }
+      alert('Enregistré.');
+    };
+
+    // Par défaut : afficher les ouverts
+    $('listOpenBtn').click();
+  </script>
+</body>
+</html>

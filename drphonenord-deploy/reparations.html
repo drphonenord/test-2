@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Réparations — Problèmes courants | Dr Phone</title>
+  <meta name="description" content="Écran, batterie, charge, caméra, audio, dos verre, eau… Sélectionne ton problème et vois notre solution.">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <style>
+    :root{--fg:#0b1220;--muted:#6b7280;--border:#e5e7eb;--brand:#2563eb;--brand2:#06b6d4;--bg:#f8fafc}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--fg);background:var(--bg)}
+    .container{max-width:1100px;margin:0 auto;padding:0 16px}
+    .section{padding:56px 0}
+    .h1{font-size:clamp(28px,3.5vw,40px)} .muted{color:var(--muted)} .small{font-size:.9rem}
+    .grid{display:grid;gap:16px} .grid-3{grid-template-columns:280px 1fr} @media(max-width:980px){.grid-3{grid-template-columns:1fr}}
+    .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px}
+    .btn{display:inline-block;border:1px solid var(--brand);background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;padding:10px 16px;border-radius:12px;text-decoration:none;font-weight:700}
+    .btn.outline{background:transparent;color:var(--brand);border-color:var(--brand)}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:#fff;cursor:pointer}
+    .chip.active{border-color:var(--brand);box-shadow:0 0 0 2px rgba(37,99,235,.15)}
+    ul{line-height:1.7}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#eef2ff;border:1px solid #c7d2fe;padding:2px 6px;border-radius:6px}
+  </style>
+
+  <style>
+    .nav{display:flex;gap:14px;align-items:center;flex-wrap:nowrap}
+    .nav a{white-space:nowrap}
+    .nav .btn{margin-left:auto}
+    .nav-more{position:relative}
+    .more-btn{border:1px solid var(--border);background:#fff;border-radius:10px;padding:8px 10px;cursor:pointer}
+    .more-menu{position:absolute;top:42px;right:0;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 32px rgba(2,6,23,.12);padding:8px;display:none;min-width:200px;z-index:30}
+    .more-menu a{display:block;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--fg)}
+    .more-menu a:hover{background:#f3f4f6}
+    .nav-burger{display:none;margin-left:8px;border:1px solid var(--border);background:#fff;border-radius:10px;padding:8px 10px}
+    @media(max-width:1080px){
+      .nav a[href="#marques"], .nav a[href="/villes/cambrai.html"], .nav a[href="#avis"], .nav a[href="#devis"]{display:none}
+      .nav .btn{order:1;margin-left:0}
+      .nav-burger{display:block}
+    }
+    .mobile-drawer{position:fixed;inset:0;display:none;z-index:50;background:rgba(0,0,0,.15)}
+    .mobile-panel{position:absolute;right:10px;top:10px;left:10px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:0 16px 48px rgba(2,6,23,.2)}
+    .mobile-panel a{display:block;padding:10px 8px;border-radius:8px}
+    .mobile-panel a:hover{background:#f3f4f6}
+    /* Modal Diagnostic */
+    .diag-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.25);display:none;z-index:60}
+    .diag-modal{position:fixed;inset:5% 5%;background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 24px 64px rgba(2,6,23,.25);display:none;z-index:70;overflow:auto}
+    .diag-close{position:sticky;top:0;display:inline-block;margin-left:auto;border:1px solid var(--border);background:#fff;border-radius:10px;padding:6px 10px}
+  </style>
+
+</head>
+<body>
+
+  <header class="container" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px">
+    <div style="font-weight:800;font-size:20px">Dr Phone</div>
+    <nav class="nav">
+      <a href="/#services">Services</a>
+      <a href="/reparations.html">Réparations</a>
+      <a href="/#marques">Marques</a>
+      <a href="/villes/cambrai.html">Zones</a>
+      <a href="/#avis">Avis</a>
+      <a href="/#devis">Devis</a>
+      <a class="btn cta" href="/#rdv">Prendre RDV</a>
+      <div class="nav-more">
+        <button class="more-btn" aria-haspopup="true" aria-expanded="false">Plus ▾</button>
+        <div class="more-menu" role="menu">
+          <a href="/reparations.html#diag" role="menuitem">Diagnostic (2 min)</a>
+          <a href="/#process" role="menuitem">Process</a>
+          <a href="/entreprises.html" role="menuitem">Entreprises</a>
+          <a href="/assurance.html" role="menuitem">Assurance</a>
+          <a href="/suivi.html" role="menuitem">Suivi</a>
+          <a href="/a-propos.html" role="menuitem">À propos</a>
+          <a href="/garantie.html" role="menuitem">Garantie</a>
+          <a href="/paiement.html" role="menuitem">Paiement</a>
+          <a href="/rachat.html" role="menuitem">Rachat</a>
+          <a href="/diagnostic.html" role="menuitem">Diagnostic (complet)</a>
+          <a href="/confidentialite.html" role="menuitem">Confidentialité</a>
+        </div>
+      </div>
+      <button class="nav-burger" aria-label="Menu" aria-expanded="false">☰</button>
+    </nav>
+  </header>
+
+
+  
+
+  <section class="section" style="background:linear-gradient(180deg,#eef2ff,#f8fafc)">
+    <div class="container">
+      <h1 class="h1">Réparations — choisis ton problème</h1>
+      <p class="muted">Tout est sur une page. On affiche le bloc qui t’intéresse, avec les bons conseils + CTA directs.</p>
+      <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn" id="openDiag">Lancer un diagnostic guidé (2 min)</a>
+        <a class="btn outline" href="/diagnostic.html">Version complète</a>
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid grid-3">
+      <div class="card small">
+        <h3>Problèmes</h3>
+        <div id="menu" class="chips" style="flex-direction:column;gap:10px"></div>
+        <div class="muted" style="margin-top:14px">Astuce : lien direct possible, ex. <span class="kbd">/reparations.html#pb=batterie</span></div>
+      </div>
+      <div id="content" class="card" style="min-height:320px">
+        <!-- dynamic content here -->
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const DATA = {
+      "ecran": {
+        icon:"🖥️", title:"Écran fissuré / affichage",
+        symptomes:["Fissures, taches, lignes","Plus de tactile ou tactile fantôme","Écran noir mais téléphone qui vibre/sonne"],
+        causes:["Choc / chute","Écran LCD/OLED endommagé","Nappe écran / châssis déformé"],
+        solution:["Remplacement écran (OLED/LCD selon modèle)","Vérif châssis, joints et étanchéité","Test complet avant/après"],
+        delai:"20–60 min selon modèle (+ test)",
+        tips:["Sauvegarde si possible","Mettre une vitre trempée après réparation","Étui anti-choc recommandé"],
+        cta:"Remplacer l’écran"
+      },
+      "batterie": {
+        icon:"🔋", title:"Batterie / autonomie",
+        symptomes:["Chute rapide, extinction aléatoire","Batterie gonflée (châssis qui baille)","% qui saute, charge lente"],
+        causes:["Batterie usée / cycles élevés","Connecteur batterie fatigué","Chargeurs non conformes"],
+        solution:["Remplacement batterie","Nettoyage connecteurs","Test capacité / tension"],
+        delai:"20–45 min",
+        tips:["Éviter chargeur bas de gamme","Ne pas descendre sous 5% régulièrement","Mises à jour OK"],
+        cta:"Changer la batterie"
+      },
+      "charge": {
+        icon:"🔌", title:"Charge / connecteur",
+        symptomes:["Ne charge plus / faux contact","Pas détecté par l’ordinateur","Charge sans fil OK mais pas filaire"],
+        causes:["Connecteur usé/sale/oxydé","Nappe de charge HS","Alim/chargeur/câble défectueux"],
+        solution:["Nettoyage pro du port","Remplacement du connecteur / nappe","Test charge et data"],
+        delai:"30–60 min",
+        tips:["Tester un autre câble/chargeur","Éviter poussière et liquide","Préférer charge lente à la nuit"],
+        cta:"Réparer la charge"
+      },
+      "camera": {
+        icon:"📷", title:"Caméra (avant / arrière)",
+        symptomes:["Flou, tremblement, taches","App caméra qui plante","FaceID/portrait KO"],
+        causes:["Module caméra HS","Lentille/focus bloqué","Nappe endommagée"],
+        solution:["Remplacement module caméra","Nettoyage / recalage","Test capteurs associés"],
+        delai:"20–45 min",
+        tips:["Éviter pression sur blocs caméra","Pose verre de protection lentilles","Boîtier anti-choc"],
+        cta:"Réparer la caméra"
+      },
+      "audio": {
+        icon:"🎧", title:"Audio / micro / HP",
+        symptomes:["On ne t’entend pas / son faible","Grésillements, coupures","Pas de son en appel / casque OK"],
+        causes:["Grille encrassée / HP usé","Micro/nappe HS","Liquide / oxydation"],
+        solution:["Nettoyage grille / remplacement HP","Remplacement micro/nappe","Test audio complet"],
+        delai:"20–45 min",
+        tips:["Nettoyage doux (pas d’aiguille)","Éviter humidité","Écouteurs certifiés"],
+        cta:"Réparer le son"
+      },
+      "dos": {
+        icon:"🧩", title:"Dos en verre / châssis",
+        symptomes:["Dos fissuré/cassé","Appareil photo qui bouge","Châssis tordu"],
+        causes:["Chute / pression","Fixations caméra endommagées","Déformation structure"],
+        solution:["Remplacement dos en verre","Recalage modules / pads","Vérif étanchéité"],
+        delai:"45–90 min selon modèle",
+        tips:["Coque renforcée","Vitre de protection dos","Éviter charges magnétiques avec dos abîmé"],
+        cta:"Remplacer le dos"
+      },
+      "eau": {
+        icon:"💧", title:"Eau / oxydation",
+        symptomes:["Redémarrages, écran qui délire","Charge impossible","Micro/HP aléatoires"],
+        causes:["Contact liquide","Oxydation connecteurs","Court-circuit nappe"],
+        solution:["Ouverture et nettoyage isopropylique","Traitement oxydation","Tests multi-modules"],
+        delai:"Selon degré (diagnostic express)",
+        tips:["Ne pas recharger tout de suite","Couper l’appareil, ne pas chauffer","Apporter rapidement"],
+        cta:"Traitement oxydation"
+      },
+      "boutons": {
+        icon:"🔘", title:"Boutons / FaceID / TouchID",
+        symptomes:["Bouton ne clique plus","Volume bloqué","FaceID/empreinte inopérants"],
+        causes:["Nappes usées","Usure mécanique","Modules sécurité défectueux"],
+        solution:["Remplacement nappe/bouton","Recalage / nettoyage","Tests sécurité"],
+        delai:"30–60 min",
+        tips:["Éviter appuis prolongés","Coque qui respecte les boutons","Mises à jour recommandées"],
+        cta:"Réparer boutons/ID"
+      },
+      "logiciel": {
+        icon:"🧠", title:"Logiciel / données",
+        symptomes:["Bootloop, lenteurs","Écran de récupération","Espace saturé"],
+        causes:["MAJ interrompue","Applis corrompues","Stockage plein"],
+        solution:["Sauvegarde/restore si possible","Réinstall propre","Tri stockage"],
+        delai:"Selon cas",
+        tips:["Sauvegarde iCloud/Google activée","Mises à jour régulières","Ne pas forcer MAJ sur batterie faible"],
+        cta:"Support logiciel"
+      }
+    };
+
+    function el(tag, attrs={}, html=''){
+      const e=document.createElement(tag);
+      for(const k in attrs){ e.setAttribute(k, attrs[k]); }
+      e.innerHTML = html;
+      return e;
+    }
+
+    function renderMenu(activeKey){
+      const menu=document.getElementById('menu');
+      const chips=document.getElementById('chips');
+      menu.innerHTML=''; chips.innerHTML='';
+      Object.entries(DATA).forEach(([k,v])=>{
+        const item = el('div', {class:'chip'+(k===activeKey?' active':''), 'data-key':k}, v.icon+' '+v.title);
+        const item2 = el('div', {class:'chip'+(k===activeKey?' active':''), 'data-key':k}, v.icon+' '+v.title);
+        [item,item2].forEach(it=>it.onclick=()=>select(k));
+        menu.appendChild(item);
+        chips.appendChild(item2);
+      });
+    }
+
+    function renderContent(key){
+      const v = DATA[key]; const c = document.getElementById('content');
+      if(!v){ c.innerHTML='<div class="muted">Sélectionne un problème.</div>'; return; }
+      c.innerHTML = `
+        <h2>${v.icon} ${v.title}</h2>
+        <div class="grid" style="grid-template-columns:1fr 1fr; gap:16px">
+          <div>
+            <h3>Symptômes</h3>
+            <ul>${v.symptomes.map(s=>'<li>'+s+'</li>').join('')}</ul>
+            <h3>Causes probables</h3>
+            <ul>${v.causes.map(s=>'<li>'+s+'</li>').join('')}</ul>
+          </div>
+          <div>
+            <h3>Notre solution</h3>
+            <ul>${v.solution.map(s=>'<li>'+s+'</li>').join('')}</ul>
+            <p class="muted"><strong>Délai :</strong> ${v.delai}</p>
+            <h3>Conseils</h3>
+            <ul>${v.tips.map(s=>'<li>'+s+'</li>').join('')}</ul>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+          <a class="btn" href="/#devis" id="cta-devis">Demander un devis</a>
+          <a class="btn outline" href="/#rdv" id="cta-rdv">Prendre rendez-vous</a>
+        </div>
+      `;
+      // Prefill bridge on CTA click
+      const attach = (id)=>{
+        const a = document.getElementById(id);
+        if(a){ a.addEventListener('click', ()=>{
+          try{
+            localStorage.setItem('drp_pb', v.title);
+            const model = (document.getElementById('modelHint')||{}).value || '';
+            const notes = 'Problème: '+v.title + (model? ' | Modèle: '+model : '');
+            localStorage.setItem('drp_model', model);
+            localStorage.setItem('drp_notes', notes);
+          }catch(e){}
+        });}
+      };
+      attach('cta-devis'); attach('cta-rdv');
+    }
+
+    function select(key){
+      renderMenu(key); renderContent(key);
+      if(history && history.replaceState){ history.replaceState(null,'', '#pb='+encodeURIComponent(key)); }
+      // scroll to content on mobile
+      document.getElementById('content').scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function boot(){
+      const hash = (location.hash||'').replace('#','');
+      let key = 'ecran';
+      if(hash.startsWith('pb=')){ key = decodeURIComponent(hash.split('=')[1]||'ecran'); }
+      renderMenu(key); renderContent(key);
+      // Add a small model hint input above CTAs
+      const modelInput = el('input', {id:'modelHint', placeholder:'Modèle (ex. iPhone 13)'});
+      modelInput.style.cssText='width:100%;padding:10px;border:1px solid var(--border);border-radius:12px;margin-top:12px';
+      document.getElementById('content').appendChild(modelInput);
+    }
+    boot();
+  </script>
+
+  <div class="diag-backdrop" id="diagBackdrop"></div>
+  <div class="diag-modal" id="diagModal" role="dialog" aria-modal="true" aria-labelledby="diagTitle">
+    <div style="display:flex;align-items:center;gap:8px;position:sticky;top:0;background:#fff;padding-bottom:8px;z-index:1">
+      <h2 id="diagTitle" style="margin:8px 0">Diagnostic rapide</h2>
+      <button class="diag-close" id="diagClose">Fermer ✕</button>
+    </div>
+    <div id="diagContent">
+      <!-- wizard content injected here -->
+    </div>
+  </div>
+
+
+  <script>
+    // Dropdown "Plus"
+    (function(){
+      var btn = document.querySelector('.more-btn');
+      var menu = document.querySelector('.more-menu');
+      if(btn && menu){
+        btn.addEventListener('click', function(){
+          var open = menu.style.display === 'block';
+          menu.style.display = open ? 'none' : 'block';
+          btn.setAttribute('aria-expanded', String(!open));
+        });
+        document.addEventListener('click', function(e){
+          if(!menu.contains(e.target) && !btn.contains(e.target)){ menu.style.display='none'; btn.setAttribute('aria-expanded','false'); }
+        });
+      }
+    })();
+    // Mobile burger -> drawer
+    (function(){
+      var b = document.querySelector('.nav-burger');
+      if(!b) return;
+      var drawer = document.createElement('div'); drawer.className='mobile-drawer';
+      drawer.innerHTML = '<div class="mobile-panel">'+
+        '<a href="/#services">Services</a>'+
+        '<a href="/reparations.html">Réparations</a>'+
+        '<a href="/#marques">Marques</a>'+
+        '<a href="/villes/cambrai.html">Zones</a>'+
+        '<a href="/#avis">Avis</a>'+
+        '<a href="/#devis">Devis</a>'+
+        '<a href="/#rdv" class="btn" style="display:inline-block;margin:6px 0">Prendre RDV</a>'+
+        '<hr>'+
+        '<a href="/#process">Process</a>'+
+        '<a href="/entreprises.html">Entreprises</a>'+
+        '<a href="/assurance.html">Assurance</a>'+
+        '<a href="/suivi.html">Suivi</a>'+
+        '<a href="/a-propos.html">À propos</a>'+
+        '<a href="/garantie.html">Garantie</a>'+
+        '<a href="/paiement.html">Paiement</a>'+
+        '<a href="/rachat.html">Rachat</a>'+
+        '<a href="/diagnostic.html">Diagnostic</a>'+
+      '</div>';
+      document.body.appendChild(drawer);
+      function toggle(open){
+        drawer.style.display = open ? 'block' : 'none';
+        b.setAttribute('aria-expanded', String(open));
+      }
+      b.addEventListener('click', function(){ toggle(drawer.style.display!=='block'); });
+      drawer.addEventListener('click', function(e){ if(e.target===drawer) toggle(false); });
+    })();
+    // Diagnostic modal logic (mini wizard)
+    (function(){
+      function open(){ document.getElementById('diagBackdrop').style.display='block'; document.getElementById('diagModal').style.display='block'; }
+      function close(){ document.getElementById('diagBackdrop').style.display='none'; document.getElementById('diagModal').style.display='none'; }
+      var btnOpen = document.getElementById('openDiag');
+      var btnClose = document.getElementById('diagClose');
+      if(btnOpen){ btnOpen.addEventListener('click', function(){ open(); renderStep(1); }); }
+      if(btnClose){ btnClose.addEventListener('click', close); }
+      document.getElementById('diagBackdrop').addEventListener('click', close);
+      // Deep link #diag opens modal
+      if((location.hash||'') === '#diag'){ open(); renderStep(1); }
+      // Wizard content
+      var state = {symptom:'', model:'', notes:''};
+      function renderStep(n){
+        var c = document.getElementById('diagContent');
+        if(n===1){
+          c.innerHTML = '<div><p class="muted">Choisis le symptôme principal :</p>'+
+            '<select id="dSymptom"><option value="">Choisir…</option>'+
+            '<option value="ecran">Écran fissuré / affichage</option>'+
+            '<option value="batterie">Batterie / autonomie</option>'+
+            '<option value="charge">Charge / connecteur</option>'+
+            '<option value="camera">Caméra</option>'+
+            '<option value="audio">Audio / micro / HP</option>'+
+            '<option value="dos">Dos en verre / châssis</option>'+
+            '<option value="eau">Eau / oxydation</option>'+
+            '<option value="boutons">Boutons / FaceID / TouchID</option>'+
+            '<option value="logiciel">Logiciel / données</option>'+
+            '</select>'+
+            '<div style="margin-top:10px"><button class="btn" id="dNext1">Suivant</button></div></div>';
+          document.getElementById('dNext1').onclick = function(){
+            var v = document.getElementById('dSymptom').value; if(!v) return;
+            state.symptom = v; renderStep(2);
+          };
+        } else if(n===2){
+          c.innerHTML = '<div>'+
+            '<input id="dModel" placeholder="Modèle (ex. iPhone 13)" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:12px" />'+
+            '<textarea id="dNotes" rows="4" placeholder="Décris le souci (depuis quand, contexte…)" style="margin-top:8px;width:100%;padding:10px;border:1px solid var(--border);border-radius:12px"></textarea>'+
+            '<div style="margin-top:10px;display:flex;gap:8px"><button class="btn" id="dNext2">Voir la solution</button><button class="btn outline" id="dBack">Retour</button></div>'+
+          '</div>';
+          document.getElementById('dBack').onclick = function(){ renderStep(1); };
+          document.getElementById('dNext2').onclick = function(){
+            state.model = document.getElementById('dModel').value.trim(); state.notes = document.getElementById('dNotes').value.trim(); renderStep(3);
+          };
+        } else {
+          // Map recommendation
+          var MAP = {
+            ecran:'Remplacement écran (OLED/LCD) selon modèle + test complet.',
+            batterie:'Remplacement batterie + test capacité.',
+            charge:'Diagnostic connecteur/nappe + nettoyage pro.',
+            camera:'Remplacement module caméra / recalage.',
+            audio:'Nettoyage / remplacement HP-micro.',
+            dos:'Remplacement dos verre + vérif étanchéité.',
+            eau:'Ouverture + traitement oxydation (au plus vite).',
+            boutons:'Remplacement nappe/bouton + tests sécurité.',
+            logiciel:'Sauvegarde/restore, réinstall propre.'
+          };
+          var label = MAP[state.symptom] || 'Diagnostic personnalisé.';
+          var title = document.querySelector('[data-key="'+state.symptom+'"]')?.textContent || 'Problème';
+          var notes = 'Problème: '+title + (state.model? ' | Modèle: '+state.model : '') + (state.notes? ' | Notes: '+state.notes : '');
+          c.innerHTML = '<div>'+
+            '<p class="muted">Recommandation :</p><p><strong>'+label+'</strong></p>'+
+            '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">'+
+              '<a class="btn" id="dDevis" href="/#devis">Demander un devis</a>'+
+              '<a class="btn outline" id="dRDV" href="/#rdv">Prendre RDV</a>'+
+            '</div>'+
+            '<p class="muted" style="margin-top:8px">On pré-remplit ton formulaire automatiquement.</p>'+
+          '</div>';
+          // Prefill bridge
+          function setPrefill(){
+            try{
+              localStorage.setItem('drp_pb', title);
+              if(state.model) localStorage.setItem('drp_model', state.model);
+              localStorage.setItem('drp_notes', notes);
+            }catch(e){}
+          }
+          document.getElementById('dDevis').addEventListener('click', setPrefill);
+          document.getElementById('dRDV').addEventListener('click', setPrefill);
+        }
+      }
+    })();
+  </script>
+
+
+  <footer style="margin-top:56px;background:#fff;border-top:1px solid var(--border)">
+    <div class="container" style="padding:24px 16px">
+      <div class="cols">
+        <div>
+          <div style="font-weight:800;font-size:18px">Dr Phone</div>
+          <p class="muted">Votre réparateur proche de chez vous — Cambrai & alentours.</p>
+          <p class="muted">4T rue Guillaume du Fay, 59400 Cambrai<br>
+          <a href="tel:+33362020622">03 62 02 06 22</a> · <a href="mailto:drphonenord@gmail.com">drphonenord@gmail.com</a></p>
+          <p class="muted">Lun–Ven 8h–19h · Sam 8h–20h · Dim 10h–20h</p>
+        </div>
+        <div>
+          <div style="font-weight:700">Liens utiles</div>
+          <ul class="muted" style="list-style:none;padding:0;margin:8px 0 0 0">
+            <li><a href="/reparations.html">Réparations</a></li>
+            <li><a href="/reparations.html#diag">Diagnostic (2 min)</a></li>
+            <li><a href="/#devis">Demander un devis</a></li>
+            <li><a href="/#rdv">Prendre RDV</a></li>
+            <li><a href="/suivi.html">Suivi de réparation</a></li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-weight:700">Infos</div>
+          <ul class="muted" style="list-style:none;padding:0;margin:8px 0 0 0">
+            <li><a href="/a-propos.html">À propos</a></li>
+            <li><a href="/garantie.html">Garantie & qualité</a></li>
+            <li><a href="/paiement.html">Paiement & facturation</a></li>
+            <li><a href="/entreprises.html">Entreprises</a></li>
+            <li><a href="/assurance.html">Assurance</a></li>
+            <li><a href="/confidentialite.html">Confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="muted" style="margin-top:16px;font-size:.9rem">© 2025 Dr Phone · Réparateur indépendant — les marques citées restent la propriété de leurs détenteurs.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

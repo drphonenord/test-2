@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin — Prix par état (4 états)</title>
+  <style>
+    :root{--fg:#0b1220;--muted:#6b7280;--border:#e5e7eb;--brand:#2563eb;--brand2:#06b6d4;--bg:#f8fafc}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--fg);background:#f8fafc}
+    .container{max-width:1200px;margin:0 auto;padding:20px 16px}
+    .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-top:16px}
+    input,select{padding:8px;border:1px solid var(--border);border-radius:10px}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid var(--border);padding:8px;text-align:left;vertical-align:top}
+    th{font-weight:800;background:#f9fafb}
+    .row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr auto;gap:8px;margin-top:8px}
+    .btn{display:inline-block;border:1px solid var(--brand);background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;padding:8px 12px;border-radius:10px;text-decoration:none;font-weight:700;cursor:pointer}
+    .btn.out{background:#fff;color:var(--brand)}
+    .muted{color:var(--muted)} .small{font-size:.9rem}
+    .flex{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .right{margin-left:auto}
+    code{background:#f3f4f6;padding:2px 6px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Admin — Prix par état (4 états)</h1>
+    <p class="muted small">API: <code>/.netlify/functions/prices_states</code> → blob <code>prices_states.json</code>. États: <b>neuf</b>, <b>tb</b>, <b>bon</b>, <b>casse</b>.</p>
+
+    <div class="card">
+      <div class="flex">
+        <div style="flex:1">
+          <label>Clé admin (ADMIN_TOKEN)</label><br/>
+          <input id="token" placeholder="Colle la valeur de ADMIN_TOKEN" style="width:100%"/>
+          <button class="btn out" id="saveToken">Enregistrer</button>
+        </div>
+        <div style="flex:2">
+          <label>Recherche</label><br/>
+          <input id="search" placeholder="Apple, iPhone 14, 128…" style="width:60%"/>
+          <button class="btn out" id="btnSearch">Filtrer</button>
+          <button class="btn out" id="btnReset">Réinitialiser</button>
+        </div>
+        <div class="right">
+          <label>&nbsp;</label><br/>
+          <button class="btn out" id="btnExport">Exporter JSON</button>
+          <label class="btn out" for="fileImport">Importer JSON</label>
+          <input type="file" id="fileImport" accept="application/json" style="display:none"/>
+        </div>
+      </div>
+      <div id="bootMsg" class="muted small" style="margin-top:8px"></div>
+    </div>
+
+    <div class="card">
+      <h3>Ajouter / Mettre à jour</h3>
+      <div class="row">
+        <input id="newBrand" placeholder="Marque (ex. Apple)"/>
+        <input id="newModel" placeholder="Modèle (ex. iPhone 14)"/>
+        <input id="newStorage" placeholder="Stockage (Go)" type="number" min="4"/>
+        <input id="n_open" placeholder="Neuf — ouverture" type="number" min="0"/>
+        <input id="n_ceil" placeholder="Neuf — plafond" type="number" min="0"/>
+        <input id="tb_open" placeholder="Très bon — ouverture" type="number" min="0"/>
+        <input id="tb_ceil" placeholder="Très bon — plafond" type="number" min="0"/>
+        <input id="b_open" placeholder="Bon — ouverture" type="number" min="0"/>
+        <input id="b_ceil" placeholder="Bon — plafond" type="number" min="0"/>
+        <button class="btn" id="btnAdd">Ajouter / MAJ</button>
+      </div>
+      <div class="row">
+        <div></div><div></div><div></div>
+        <input id="c_open" placeholder="Cassé — ouverture" type="number" min="0"/>
+        <input id="c_ceil" placeholder="Cassé — plafond" type="number" min="0"/>
+        <div></div><div></div><div></div><div></div>
+      </div>
+      <div class="muted small" style="margin-top:6px">Astuce: pour un modèle avec plusieurs stockages, ajoute plusieurs lignes.</div>
+    </div>
+
+    <div class="card">
+      <div class="flex" style="justify-content:space-between">
+        <div><b>Liste des tarifs (par état)</b> — <span id="count" class="muted small">0</span> entrées</div>
+        <div class="muted small">Édite dans le tableau puis “Enregistrer tout”.</div>
+      </div>
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th>Marque</th><th>Modèle</th><th>Stockage</th>
+            <th>Neuf (ouv/plaf)</th>
+            <th>Très bon (ouv/plaf)</th>
+            <th>Bon (ouv/plaf)</th>
+            <th>Cassé (ouv/plaf)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="flex" style="margin-top:10px">
+        <button class="btn" id="btnSaveAll">Enregistrer tout</button>
+        <div id="msg" class="muted small"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const FN = "/.netlify/functions/prices_states";
+const $ = id => document.getElementById(id);
+if (localStorage.getItem('drp_admin_token')) $('token').value = localStorage.getItem('drp_admin_token');
+$('saveToken').onclick = () => { localStorage.setItem('drp_admin_token', $('token').value.trim()); alert('Token enregistré.'); };
+
+let rows = []; // flat
+let allRows = [];
+
+// Helpers transform
+function flatFromTree(tree){
+  const out=[];
+  for (const brand of Object.keys(tree||{})){
+    for (const model of Object.keys(tree[brand]||{})){
+      for (const storage of Object.keys(tree[brand][model]||{})){
+        const st = (tree[brand][model][storage]||{}).states || {};
+        const g = k => (st[k]||{opening:"",ceiling:""});
+        out.push({
+          brand, model, storage:Number(storage),
+          n_open:g('neuf').opening, n_ceil:g('neuf').ceiling,
+          tb_open:g('tb').opening,  tb_ceil:g('tb').ceiling,
+          b_open:g('bon').opening,  b_ceil:g('bon').ceiling,
+          c_open:g('casse').opening, c_ceil:g('casse').ceiling
+        });
+      }
+    }
+  }
+  return out;
+}
+function treeFromFlat(list){
+  const out={};
+  for (const it of list){
+    if (!out[it.brand]) out[it.brand]={};
+    if (!out[it.brand][it.model]) out[it.brand][it.model]={};
+    out[it.brand][it.model][String(it.storage)] = {
+      states: {
+        neuf:  { opening:Number(it.n_open)||0, ceiling:Number(it.n_ceil)||0 },
+        tb:    { opening:Number(it.tb_open)||0, ceiling:Number(it.tb_ceil)||0 },
+        bon:   { opening:Number(it.b_open)||0, ceiling:Number(it.b_ceil)||0 },
+        casse: { opening:Number(it.c_open)||0, ceiling:Number(it.c_ceil)||0 }
+      }
+    };
+  }
+  return out;
+}
+
+// UI render
+function render(){
+  const tb = document.querySelector("#tbl tbody");
+  tb.innerHTML = "";
+  rows.forEach((it, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input value="${it.brand}" data-k="brand"/></td>
+      <td><input value="${it.model}" data-k="model"/></td>
+      <td><input type="number" min="4" value="${it.storage}" data-k="storage"/></td>
+      <td><input type="number" min="0" value="${it.n_open}" data-k="n_open"/><br/><input type="number" min="0" value="${it.n_ceil}" data-k="n_ceil"/></td>
+      <td><input type="number" min="0" value="${it.tb_open}" data-k="tb_open"/><br/><input type="number" min="0" value="${it.tb_ceil}" data-k="tb_ceil"/></td>
+      <td><input type="number" min="0" value="${it.b_open}" data-k="b_open"/><br/><input type="number" min="0" value="${it.b_ceil}" data-k="b_ceil"/></td>
+      <td><input type="number" min="0" value="${it.c_open}" data-k="c_open"/><br/><input type="number" min="0" value="${it.c_ceil}" data-k="c_ceil"/></td>
+      <td><button class="btn out" data-act="del" data-idx="${idx}">Supprimer</button></td>
+    `;
+    tb.appendChild(tr);
+  });
+  $('count').textContent = rows.length;
+}
+
+function applyFilter(){
+  const q = $('search').value.trim().toUpperCase();
+  rows = !q ? allRows.slice() :
+    allRows.filter(it => (`${it.brand} ${it.model} ${it.storage}`).toUpperCase().includes(q));
+  render();
+}
+
+// Load initial
+async function load(){
+  try{
+    const r = await fetch(FN, { cache:"no-store" });
+    if(!r.ok){ $('bootMsg').textContent = "API indisponible ("+r.status+"). Vérifie netlify/functions/prices_states.js + ADMIN_TOKEN + redeploy."; return; }
+    const j = await r.json();
+    allRows = flatFromTree(j);
+    applyFilter();
+    $('bootMsg').textContent = "OK — "+allRows.length+" lignes chargées.";
+  }catch(e){
+    $('bootMsg').textContent = "Erreur de chargement: "+e.message;
+  }
+}
+load();
+
+// Search/reset
+$('btnSearch').onclick = applyFilter;
+$('btnReset').onclick = () => { $('search').value=''; applyFilter(); };
+
+// Table editing
+document.querySelector('#tbl').addEventListener('input', (e)=>{
+  const inp = e.target.closest('input[data-k]'); if(!inp) return;
+  const row = inp.closest('tr'); const idx = Array.from(row.parentNode.children).indexOf(row);
+  const k = inp.dataset.k;
+  const v = Number.isNaN(Number(inp.value)) ? inp.value : Number(inp.value);
+  rows[idx][k] = v;
+});
+document.querySelector('#tbl').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-act="del"]'); if(!btn) return;
+  const idx = Number(btn.dataset.idx);
+  rows.splice(idx,1);
+  allRows = rows.slice();
+  render();
+});
+
+// Add
+$('btnAdd').onclick = async ()=>{
+  const b=$('newBrand').value.trim(), m=$('newModel').value.trim();
+  const s=Number($('newStorage').value);
+  const vals = ['n_open','n_ceil','tb_open','tb_ceil','b_open','b_ceil','c_open','c_ceil']
+    .map(id => Number($(id).value)||0);
+  if(!b||!m||!s){ alert('Marque, modèle et stockage requis.'); return; }
+  rows.push({brand:b, model:m, storage:s,
+    n_open:vals[0], n_ceil:vals[1], tb_open:vals[2], tb_ceil:vals[3],
+    b_open:vals[4], b_ceil:vals[5], c_open:vals[6], c_ceil:vals[7]
+  });
+  allRows = rows.slice();
+  render();
+};
+
+// Save all
+$('btnSaveAll').onclick = async () => {
+  const t = localStorage.getItem('drp_admin_token') || $('token').value.trim();
+  if(!t){ alert('Renseigne ta clé admin.'); return; }
+  const payload = treeFromFlat(rows);
+  const r = await fetch(FN, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-admin-token': t },
+    body: JSON.stringify(payload)
+  });
+  const j = await r.json();
+  if (!r.ok) { $('msg').textContent = j.error || 'Erreur POST'; return; }
+  $('msg').textContent = 'Enregistré.'; setTimeout(()=> $('msg').textContent='', 1500);
+  load();
+};
+
+// Import / Export
+$('btnExport').onclick = () => {
+  const obj = treeFromFlat(rows);
+  const blob = new Blob([JSON.stringify(obj, null, 2)], {type:'application/json;charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='prices_states-export.json';
+  document.body.appendChild(a); a.click(); a.remove();
+};
+$('fileImport').addEventListener('change', async (e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  const txt = await file.text(); let obj = null;
+  try{ obj = JSON.parse(txt); }catch{ alert('JSON invalide'); return; }
+  allRows = flatFromTree(obj);
+  applyFilter(); e.target.value='';
+});
+</script>
+</body>
+</html>

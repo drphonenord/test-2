@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>À propos & Atelier — Dr Phone</title>
+  <meta name="description" content="Qui sommes-nous ? Atelier Dr Phone à Cambrai : expertise, méthodes, engagement qualité." />
+  
+  <style>
+    :root{--fg:#0b1220;--muted:#6b7280;--border:#e5e7eb;--brand:#2563eb;--brand2:#06b6d4}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--fg);background:#f8fafc}
+    .container{max-width:1000px;margin:0 auto;padding:0 16px} .section{padding:56px 0}
+    .h1{font-size:clamp(28px,3.5vw,40px)} .muted{color:var(--muted)}
+    .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px}
+    .btn{display:inline-block;border:1px solid var(--brand);background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;padding:10px 16px;border-radius:12px;text-decoration:none;font-weight:700}
+    .btn.outline{background:transparent;color:var(--brand);border-color:var(--brand)}
+    .grid{display:grid;gap:16px} .grid-2{grid-template-columns:1fr 1fr}
+    @media(max-width:900px){.grid-2{grid-template-columns:1fr}}
+    ul{line-height:1.7}
+  </style>
+
+
+  <style>
+    .nav{display:flex;gap:14px;align-items:center;flex-wrap:nowrap}
+    .nav a{white-space:nowrap}
+    .nav .btn{margin-left:auto}
+    .nav-more{position:relative}
+    .more-btn{border:1px solid var(--border);background:#fff;border-radius:10px;padding:8px 10px;cursor:pointer}
+    .more-menu{position:absolute;top:42px;right:0;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 32px rgba(2,6,23,.12);padding:8px;display:none;min-width:220px;z-index:30}
+    .more-menu a{display:block;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--fg)}
+    .more-menu a:hover{background:#f3f4f6}
+    .nav-burger{display:none;margin-left:8px;border:1px solid var(--border);background:#fff;border-radius:10px;padding:8px 10px}
+    @media(max-width:1080px){
+      .nav a[href="#marques"], .nav a[href="/villes/cambrai.html"], .nav a[href="#avis"], .nav a[href="#devis"]{display:none}
+      .nav .btn{order:1;margin-left:0}
+      .nav-burger{display:block}
+    }
+    .mobile-drawer{position:fixed;inset:0;display:none;z-index:50;background:rgba(0,0,0,.15)}
+    .mobile-panel{position:absolute;right:10px;top:10px;left:10px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:0 16px 48px rgba(2,6,23,.2)}
+    .mobile-panel a{display:block;padding:10px 8px;border-radius:8px}
+    .mobile-panel a:hover{background:#f3f4f6}
+  </style>
+
+</head>
+<body>
+
+  <header class="container" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px">
+    <div style="font-weight:800;font-size:20px">Dr Phone</div>
+    <nav class="nav">
+      <a href="/#services">Services</a>
+      <a href="/reparations.html">Réparations</a>
+      <a href="/#marques">Marques</a>
+      <a href="/villes/cambrai.html">Zones</a>
+      <a href="/#avis">Avis</a>
+      <a href="/#devis">Devis</a>
+      <a class="btn cta" href="/#rdv">Prendre RDV</a>
+      <div class="nav-more">
+        <button class="more-btn" aria-haspopup="true" aria-expanded="false">Plus ▾</button>
+        <div class="more-menu" role="menu">
+          <a href="/reparations.html#diag" role="menuitem">Diagnostic (2 min)</a>
+          <a href="/#process" role="menuitem">Process</a>
+          <a href="/entreprises.html" role="menuitem">Entreprises</a>
+          <a href="/assurance.html" role="menuitem">Assurance</a>
+          <a href="/suivi.html" role="menuitem">Suivi</a>
+          <a href="/a-propos.html" role="menuitem">À propos</a>
+          <a href="/garantie.html" role="menuitem">Garantie</a>
+          <a href="/paiement.html" role="menuitem">Paiement</a>
+          <a href="/rachat.html" role="menuitem">Rachat</a>
+          <a href="/diagnostic.html" role="menuitem">Diagnostic (complet)</a>
+          <a href="/confidentialite.html" role="menuitem">Confidentialité</a>
+        </div>
+      </div>
+      <button class="nav-burger" aria-label="Menu" aria-expanded="false">☰</button>
+    </nav>
+  </header>
+
+
+  
+
+  <section class="section" style="background:linear-gradient(180deg,#eef2ff,#f8fafc)">
+    <div class="container">
+      <h1 class="h1">À propos</h1>
+      <p class="muted">Réparations propres, rapides, garanties. Atelier basé à Cambrai, déplacements Nord.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container grid grid-2">
+      <div class="card"><h2>Notre manière de faire</h2>
+        <ul>
+          <li>Diagnostic clair avant intervention</li>
+          <li>Pièces premium, testées à réception</li>
+          <li>Suivi rigoureux, données préservées</li>
+          <li>Garantie 6 mois (pièce remplacée)</li>
+        </ul>
+      </div>
+      <div class="card"><h2>L’atelier</h2>
+        <p class="muted">Poste ESD, outillage OEM/équivalent, consommables de qualité. Intervention à domicile/bureau ou à l’atelier.</p>
+        <a class="btn outline" href="/#rdv">Prendre rendez-vous</a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="margin-top:56px;background:#fff;border-top:1px solid var(--border)">
+    <div class="container" style="padding:24px 16px">
+      <div class="cols">
+        <div>
+          <div style="font-weight:800;font-size:18px">Dr Phone</div>
+          <p class="muted">Votre réparateur proche de chez vous — Cambrai & alentours.</p>
+          <p class="muted">4T rue Guillaume du Fay, 59400 Cambrai<br>
+          <a href="tel:+33362020622">03 62 02 06 22</a> · <a href="mailto:drphonenord@gmail.com">drphonenord@gmail.com</a></p>
+          <p class="muted">Lun–Ven 8h–19h · Sam 8h–20h · Dim 10h–20h</p>
+        </div>
+        <div>
+          <div style="font-weight:700">Liens utiles</div>
+          <ul class="muted" style="list-style:none;padding:0;margin:8px 0 0 0">
+            <li><a href="/reparations.html">Réparations</a></li>
+            <li><a href="/reparations.html#diag">Diagnostic (2 min)</a></li>
+            <li><a href="/#devis">Demander un devis</a></li>
+            <li><a href="/#rdv">Prendre RDV</a></li>
+            <li><a href="/suivi.html">Suivi de réparation</a></li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-weight:700">Infos</div>
+          <ul class="muted" style="list-style:none;padding:0;margin:8px 0 0 0">
+            <li><a href="/a-propos.html">À propos</a></li>
+            <li><a href="/garantie.html">Garantie & qualité</a></li>
+            <li><a href="/paiement.html">Paiement & facturation</a></li>
+            <li><a href="/entreprises.html">Entreprises</a></li>
+            <li><a href="/assurance.html">Assurance</a></li>
+            <li><a href="/confidentialite.html">Confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="muted" style="margin-top:16px;font-size:.9rem">© 2025 Dr Phone · Réparateur indépendant — les marques citées restent la propriété de leurs détenteurs.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

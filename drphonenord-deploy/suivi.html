@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Suivi réparation — Dr Phone</title>
+  <meta name="description" content="Consultez l'état de votre réparation avec votre code DRP.">
+  <style>
+    :root{--fg:#0b1220;--muted:#6b7280;--border:#e5e7eb;--brand:#2563eb;--brand2:#06b6d4;--bg:#f8fafc}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--fg);background:var(--bg)}
+    .container{max-width:860px;margin:0 auto;padding:24px 16px}
+    .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-top:16px}
+    h1{margin:0 0 8px} .muted{color:var(--muted)}
+    input{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;font-size:16px}
+    button{border:1px solid var(--brand);background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer}
+    .row{display:grid;grid-template-columns:1fr auto;gap:12px;margin-top:8px}
+    .status{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#f9fafb;font-weight:700}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:640px){.grid{grid-template-columns:1fr}}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe}
+    .small{font-size:.92rem}
+    a.btn{display:inline-block;text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Suivi réparation</h1>
+    <p class="muted">Entrez votre code (ex. <span class="pill">DRP-2025-123</span>) ou scannez le QR reçu en boutique.</p>
+
+    <div class="card">
+      <div class="row">
+        <input id="code" placeholder="DRP-AAAA-XXX" aria-label="Code de suivi" />
+        <button id="btn">Suivre</button>
+      </div>
+      <div id="state" class="muted" style="margin-top:8px"></div>
+    </div>
+
+    <div id="result" class="card" style="display:none">
+      <div class="grid">
+        <div>
+          <div class="muted small">Code</div>
+          <div id="res_code" class="pill" style="margin-top:4px"></div>
+        </div>
+        <div>
+          <div class="muted small">Statut</div>
+          <div id="res_status" class="status" style="margin-top:4px"></div>
+        </div>
+      </div>
+      <div class="grid" style="margin-top:10px">
+        <div>
+          <div class="muted small">Modèle</div>
+          <div id="res_model" style="margin-top:4px">—</div>
+        </div>
+        <div>
+          <div class="muted small">Client</div>
+          <div id="res_client" style="margin-top:4px">—</div>
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <div class="muted small">Note</div>
+        <div id="res_note" style="margin-top:4px">—</div>
+      </div>
+      <div style="margin-top:12px">
+        <a id="link" class="btn" href="#" target="_blank">Ouvrir ce suivi dans un nouvel onglet</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const FN='/.netlify/functions/tickets';
+    const $=id=>document.getElementById(id);
+
+    function normalize(raw){
+      let s=(raw||'').trim().toUpperCase();
+      s=s.replace(/[^A-Z0-9]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+      if(s.startsWith('DRP') && !s.startsWith('DRP-')) s='DRP-'+s.slice(3);
+      return s;
+    }
+
+    async function run(){
+      const code=normalize($('code').value);
+      $('code').value=code;
+      if(!code){$('state').textContent='Entrez un code.';return;}
+      $('state').textContent='Recherche…'; $('result').style.display='none';
+      try{
+        const r=await fetch(FN+'?id='+encodeURIComponent(code));
+        if(!r.ok){$('state').textContent='Code introuvable. Vérifiez l’orthographe ou demandez en boutique.';return;}
+        const t=await r.json();
+        $('state').textContent=''; $('result').style.display='block';
+        $('res_code').textContent=t.code||code;
+        $('res_status').textContent=t.status||'—';
+        $('res_model').textContent=t.model||'—';
+        $('res_client').textContent=t.client||'—';
+        $('res_note').textContent=t.note||'—';
+        const link=location.origin+'/suivi.html#'+encodeURIComponent(t.code||code);
+        $('link').href=link;
+      }catch(e){$('state').textContent='Erreur réseau. Réessayez dans un instant.';}
+    }
+
+    $('btn').addEventListener('click',run);
+    $('code').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); run(); }});
+
+    // Auto-run avec #CODE
+    (function(){
+      const h=(location.hash||'').replace('#','').trim();
+      if(h){ $('code').value=h; run(); }
+    })();
+  </script>
+</body>
+</html>
