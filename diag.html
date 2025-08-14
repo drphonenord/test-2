@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Diagnostic Netlify — Admin</title>
+<style>
+:root{--fg:#0b1220;--muted:#6b7280;--border:#e5e7eb;--brand:#2563eb;--bg:#f8fafc}
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,Inter,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:var(--bg)}
+.container{max-width:900px;margin:0 auto;padding:20px 16px}
+.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:12px}
+input,button{padding:10px;border:1px solid var(--border);border-radius:10px} button{background:#2563eb;color:#fff;cursor:pointer}
+pre{background:#0b1220;color:#e5e7eb;padding:12px;border-radius:12px;overflow:auto}
+.grid{display:grid;gap:8px;grid-template-columns:1fr auto}
+.small{font-size:.9rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Diagnostic Netlify — Admin</h1>
+  <p class="small">Cette page vérifie les fonctions <code>get-blob</code>, <code>set-blob</code> et le token Admin.</p>
+
+  <div class="card grid">
+    <input id="token" placeholder="ADMIN_TOKEN (coller ici)"/>
+    <button id="save">Enregistrer</button>
+  </div>
+
+  <div class="card">
+    <button id="test401">Test 401 (GET sans token)</button>
+    <pre id="out401">—</pre>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <button id="write">Écrire test (set-blob)</button>
+      <button id="read">Lire test (get-blob)</button>
+    </div>
+    <pre id="out">—</pre>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <input id="tid" placeholder="id ticket ex: 1234"/>
+      <input id="tphone" placeholder="4 derniers tel ex: 3344"/>
+      <button id="track">track-ticket</button>
+    </div>
+    <pre id="outTrack">—</pre>
+  </div>
+</div>
+
+<script>
+const $ = s=>document.querySelector(s);
+const token = localStorage.getItem('ADMIN_TOKEN')||'';
+$('#token').value = token;
+$('#save').onclick = ()=>{ localStorage.setItem('ADMIN_TOKEN', $('#token').value.trim()); alert('Token enregistré. Recharge la page d'admin ensuite.'); };
+
+$('#test401').onclick = async ()=>{
+  const r = await fetch('/.netlify/functions/get-blob?ns=health&key=ping');
+  $('#out401').textContent = r.status+' '+(await r.text());
+};
+
+$('#write').onclick = async ()=>{
+  const t = $('#token').value.trim();
+  if(!t) return alert('Colle ton ADMIN_TOKEN en haut.');
+  const r = await fetch('/.netlify/functions/set-blob', { method:'POST', headers:{'Content-Type':'application/json','x-admin-token':t}, body: JSON.stringify({ ns:'health', key:'diag_test', data:{ ok:true, at:new Date().toISOString() } })});
+  $('#out').textContent = r.status+' '+(await r.text());
+};
+
+$('#read').onclick = async ()=>{
+  const t = $('#token').value.trim();
+  if(!t) return alert('Colle ton ADMIN_TOKEN en haut.');
+  const r = await fetch('/.netlify/functions/get-blob?ns=health&key=diag_test', { headers:{'x-admin-token':t}});
+  $('#out').textContent = r.status+' '+(await r.text());
+};
+
+$('#track').onclick = async ()=>{
+  const id = $('#tid').value.trim(); const phone = $('#tphone').value.trim();
+  const r = await fetch('/.netlify/functions/track-ticket?id='+encodeURIComponent(id)+'&phone='+encodeURIComponent(phone));
+  $('#outTrack').textContent = r.status+' '+(await r.text());
+};
+</script>
+</body>
+</html>
