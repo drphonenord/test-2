@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Admin v2 — Dr Phone</title>
+  <link rel="stylesheet" href="/admin/style.css"/>
+</head>
+<body>
+<div class="container">
+  <h1 class="h1">Admin v2 — Dr Phone</h1>
+  <p class="muted small">Stockage <b>Netlify Blobs</b> + token. Dans Netlify → <i>Environment</i> ajoute <code>ADMIN_TOKEN</code> (même valeur en Production/Previews).</p>
+
+  <div class="card">
+    <div class="grid g3">
+      <div><label>Token admin</label><input id="token" placeholder="Colle ton token"/></div>
+      <div><label>Recherche</label><input id="q" placeholder="Nom, tel, modèle…"/></div>
+      <div class="toolbar"><button class="btn out" id="saveToken">Enregistrer</button><span class="badge" id="ping">Non connecté</span></div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <a href="#clients" class="tablink active">Clients</a>
+    <a href="#repairs" class="tablink">Réparations</a>
+    <a href="#orders" class="tablink">Commandes</a>
+    <a href="#tickets" class="tablink">Tickets</a>
+    <a href="#prices" class="tablink">Prix</a>
+    <a href="#states" class="tablink">Prix par État</a>
+    <a href="#config" class="tablink">Config</a>
+    <a href="#history" class="tablink">Historique</a>
+  </div>
+
+  <div id="view"></div>
+
+  <footer class="small muted">Admin v2 — CRUD générique JSON. Les datasets sont des objets/arrays stockés par Blob.</footer>
+</div>
+
+<script src="/admin/app.js"></script>
+</body>
+</html>
