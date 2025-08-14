@@ -1,0 +1,34 @@
+{
+  "items": [
+    {
+      "brand": "Apple",
+      "model": "iPhone 13",
+      "storage": 128,
+      "price": 371
+    },
+    {
+      "brand": "Apple",
+      "model": "iPhone 13",
+      "storage": 256,
+      "price": 436
+    },
+    {
+      "brand": "Apple",
+      "model": "iPhone 12",
+      "storage": 64,
+      "price": 270
+    },
+    {
+      "brand": "Samsung",
+      "model": "Galaxy S23",
+      "storage": 128,
+      "price": 520
+    },
+    {
+      "brand": "Google",
+      "model": "Pixel 7",
+      "storage": 128,
+      "price": 380
+    }
+  ]
+}

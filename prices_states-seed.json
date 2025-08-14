@@ -1,0 +1,610 @@
+{
+  "Apple": {
+    "iPhone 16 Pro Max": {
+      "256": {
+        "states": {
+          "neuf": {
+            "opening": 850,
+            "ceiling": 910
+          },
+          "tb": {
+            "opening": 762,
+            "ceiling": 822
+          },
+          "bon": {
+            "opening": 656,
+            "ceiling": 716
+          },
+          "moyen": {
+            "opening": 498,
+            "ceiling": 558
+          },
+          "casse": {
+            "opening": 234,
+            "ceiling": 294
+          }
+        }
+      },
+      "512": {
+        "states": {
+          "neuf": {
+            "opening": 950,
+            "ceiling": 1010
+          },
+          "tb": {
+            "opening": 852,
+            "ceiling": 912
+          },
+          "bon": {
+            "opening": 734,
+            "ceiling": 794
+          },
+          "moyen": {
+            "opening": 558,
+            "ceiling": 618
+          },
+          "casse": {
+            "opening": 264,
+            "ceiling": 324
+          }
+        }
+      }
+    },
+    "iPhone 16 Pro": {
+      "256": {
+        "states": {
+          "neuf": {
+            "opening": 790,
+            "ceiling": 850
+          },
+          "tb": {
+            "opening": 708,
+            "ceiling": 768
+          },
+          "bon": {
+            "opening": 610,
+            "ceiling": 670
+          },
+          "moyen": {
+            "opening": 462,
+            "ceiling": 522
+          },
+          "casse": {
+            "opening": 216,
+            "ceiling": 276
+          }
+        }
+      }
+    },
+    "iPhone 16": {
+      "128": {
+        "states": {
+          "neuf": {
+            "opening": 620,
+            "ceiling": 680
+          },
+          "tb": {
+            "opening": 555,
+            "ceiling": 615
+          },
+          "bon": {
+            "opening": 477,
+            "ceiling": 537
+          },
+          "moyen": {
+            "opening": 360,
+            "ceiling": 420
+          },
+          "casse": {
+            "opening": 165,
+            "ceiling": 225
+          }
+        }
+      },
+      "256": {
+        "states": {
+          "neuf": {
+            "opening": 670,
+            "ceiling": 730
+          },
+          "tb": {
+            "opening": 600,
+            "ceiling": 660
+          },
+          "bon": {
+            "opening": 516,
+            "ceiling": 576
+          },
+          "moyen": {
+            "opening": 390,
+            "ceiling": 450
+          },
+          "casse": {
+            "opening": 180,
+            "ceiling": 240
+          }
+        }
+      }
+    },
+    "iPhone 15 Pro Max": {
+      "256": {
+        "states": {
+          "neuf": {
+            "opening": 690,
+            "ceiling": 750
+          },
+          "tb": {
+            "opening": 618,
+            "ceiling": 678
+          },
+          "bon": {
+            "opening": 532,
+            "ceiling": 592
+          },
+          "moyen": {
+            "opening": 402,
+            "ceiling": 462
+          },
+          "casse": {
+            "opening": 186,
+            "ceiling": 246
+          }
+        }
+      }
+    },
+    "iPhone 15": {
+      "128": {
+        "states": {
+          "neuf": {
+            "opening": 490,
+            "ceiling": 550
+          },
+          "tb": {
+            "opening": 438,
+            "ceiling": 498
+          },
+          "bon": {
+            "opening": 376,
+            "ceiling": 436
+          },
+          "moyen": {
+            "opening": 282,
+            "ceiling": 342
+          },
+          "casse": {
+            "opening": 126,
+            "ceiling": 186
+          }
+        }
+      }
+    }
+  },
+  "Samsung": {
+    "Galaxy S25 Ultra": {
+      "256": {
+        "states": {
+          "neuf": {
+            "opening": 750,
+            "ceiling": 810
+          },
+          "tb": {
+            "opening": 672,
+            "ceiling": 732
+          },
+          "bon": {
+            "opening": 578,
+            "ceiling": 638
+          },
+          "moyen": {
+            "opening": 438,
+            "ceiling": 498
+          },
+          "casse": {
+            "opening": 204,
+            "ceiling": 264
+          }
+        }
+      },
+      "512": {
+        "states": {
+          "neuf": {
+            "opening": 830,
+            "ceiling": 890
+          },
+          "tb": {
+            "opening": 744,
+            "ceiling": 804
+          },
+          "bon": {
+            "opening": 641,
+            "ceiling": 701
+          },
+          "moyen": {
+            "opening": 486,
+            "ceiling": 546
+          },
+          "casse": {
+            "opening": 228,
+            "ceiling": 288
+          }
+        }
+      }
+    },
+    "Galaxy S25": {
+      "128": {
+        "states": {
+          "neuf": {
+            "opening": 590,
+            "ceiling": 650
+          },
+          "tb": {
+            "opening": 528,
+            "ceiling": 588
+          },
+          "bon": {
+            "opening": 454,
+            "ceiling": 514
+          },
+          "moyen": {
+            "opening": 342,
+            "ceiling": 402
+          },
+          "casse": {
+            "opening": 156,
+            "ceiling": 216
+          }
+        }
+      }
+    },
+    "Galaxy Z Flip 7": {
+      "256": {
+        "states": {
+          "neuf": {
+            "opening": 650,
+            "ceiling": 710
+          },
+          "tb": {
+            "opening": 582,
+            "ceiling": 642
+          },
+          "bon": {
+            "opening": 500,
+            "ceiling": 560
+          },
+          "moyen": {
+            "opening": 378,
+            "ceiling": 438
+          },
+          "casse": {
+            "opening": 174,
+            "ceiling": 234
+          }
+        }
+      }
+    },
+    "Galaxy Z Fold 7": {
+      "512": {
+        "states": {
+          "neuf": {
+            "opening": 870,
+            "ceiling": 930
+          },
+          "tb": {
+            "opening": 780,
+            "ceiling": 840
+          },
+          "bon": {
+            "opening": 672,
+            "ceiling": 732
+          },
+          "moyen": {
+            "opening": 510,
+            "ceiling": 570
+          },
+          "casse": {
+            "opening": 240,
+            "ceiling": 300
+          }
+        }
+      }
+    },
+    "Galaxy S24 Ultra": {
+      "256": {
+        "states": {
+          "neuf": {
+            "opening": 610,
+            "ceiling": 670
+          },
+          "tb": {
+            "opening": 546,
+            "ceiling": 606
+          },
+          "bon": {
+            "opening": 469,
+            "ceiling": 529
+          },
+          "moyen": {
+            "opening": 354,
+            "ceiling": 414
+          },
+          "casse": {
+            "opening": 162,
+            "ceiling": 222
+          }
+        }
+      }
+    }
+  },
+  "Google": {
+    "Pixel 9 Pro": {
+      "256": {
+        "states": {
+          "neuf": {
+            "opening": 650,
+            "ceiling": 710
+          },
+          "tb": {
+            "opening": 582,
+            "ceiling": 642
+          },
+          "bon": {
+            "opening": 500,
+            "ceiling": 560
+          },
+          "moyen": {
+            "opening": 378,
+            "ceiling": 438
+          },
+          "casse": {
+            "opening": 174,
+            "ceiling": 234
+          }
+        }
+      }
+    },
+    "Pixel 9": {
+      "128": {
+        "states": {
+          "neuf": {
+            "opening": 530,
+            "ceiling": 590
+          },
+          "tb": {
+            "opening": 474,
+            "ceiling": 534
+          },
+          "bon": {
+            "opening": 407,
+            "ceiling": 467
+          },
+          "moyen": {
+            "opening": 306,
+            "ceiling": 366
+          },
+          "casse": {
+            "opening": 138,
+            "ceiling": 198
+          }
+        }
+      }
+    },
+    "Pixel 9a": {
+      "128": {
+        "states": {
+          "neuf": {
+            "opening": 350,
+            "ceiling": 410
+          },
+          "tb": {
+            "opening": 312,
+            "ceiling": 372
+          },
+          "bon": {
+            "opening": 266,
+            "ceiling": 326
+          },
+          "moyen": {
+            "opening": 198,
+            "ceiling": 258
+          },
+          "casse": {
+            "opening": 84,
+            "ceiling": 144
+          }
+        }
+      }
+    }
+  },
+  "OnePlus": {
+    "OnePlus 13": {
+      "256": {
+        "states": {
+          "neuf": {
+            "opening": 570,
+            "ceiling": 630
+          },
+          "tb": {
+            "opening": 510,
+            "ceiling": 570
+          },
+          "bon": {
+            "opening": 438,
+            "ceiling": 498
+          },
+          "moyen": {
+            "opening": 330,
+            "ceiling": 390
+          },
+          "casse": {
+            "opening": 150,
+            "ceiling": 210
+          }
+        }
+      }
+    },
+    "OnePlus 12": {
+      "256": {
+        "states": {
+          "neuf": {
+            "opening": 450,
+            "ceiling": 510
+          },
+          "tb": {
+            "opening": 402,
+            "ceiling": 462
+          },
+          "bon": {
+            "opening": 344,
+            "ceiling": 404
+          },
+          "moyen": {
+            "opening": 258,
+            "ceiling": 318
+          },
+          "casse": {
+            "opening": 114,
+            "ceiling": 174
+          }
+        }
+      }
+    }
+  },
+  "Xiaomi": {
+    "Xiaomi 14 Ultra": {
+      "512": {
+        "states": {
+          "neuf": {
+            "opening": 670,
+            "ceiling": 730
+          },
+          "tb": {
+            "opening": 600,
+            "ceiling": 660
+          },
+          "bon": {
+            "opening": 516,
+            "ceiling": 576
+          },
+          "moyen": {
+            "opening": 390,
+            "ceiling": 450
+          },
+          "casse": {
+            "opening": 180,
+            "ceiling": 240
+          }
+        }
+      }
+    },
+    "Xiaomi 14": {
+      "256": {
+        "states": {
+          "neuf": {
+            "opening": 490,
+            "ceiling": 550
+          },
+          "tb": {
+            "opening": 438,
+            "ceiling": 498
+          },
+          "bon": {
+            "opening": 376,
+            "ceiling": 436
+          },
+          "moyen": {
+            "opening": 282,
+            "ceiling": 342
+          },
+          "casse": {
+            "opening": 126,
+            "ceiling": 186
+          }
+        }
+      }
+    }
+  },
+  "Oppo": {
+    "Find X7 Ultra": {
+      "512": {
+        "states": {
+          "neuf": {
+            "opening": 610,
+            "ceiling": 670
+          },
+          "tb": {
+            "opening": 546,
+            "ceiling": 606
+          },
+          "bon": {
+            "opening": 469,
+            "ceiling": 529
+          },
+          "moyen": {
+            "opening": 354,
+            "ceiling": 414
+          },
+          "casse": {
+            "opening": 162,
+            "ceiling": 222
+          }
+        }
+      }
+    }
+  },
+  "Honor": {
+    "Magic 6 Pro": {
+      "256": {
+        "states": {
+          "neuf": {
+            "opening": 530,
+            "ceiling": 590
+          },
+          "tb": {
+            "opening": 474,
+            "ceiling": 534
+          },
+          "bon": {
+            "opening": 407,
+            "ceiling": 467
+          },
+          "moyen": {
+            "opening": 306,
+            "ceiling": 366
+          },
+          "casse": {
+            "opening": 138,
+            "ceiling": 198
+          }
+        }
+      }
+    }
+  },
+  "Nothing": {
+    "Phone (2a)": {
+      "256": {
+        "states": {
+          "neuf": {
+            "opening": 270,
+            "ceiling": 330
+          },
+          "tb": {
+            "opening": 240,
+            "ceiling": 300
+          },
+          "bon": {
+            "opening": 204,
+            "ceiling": 264
+          },
+          "moyen": {
+            "opening": 150,
+            "ceiling": 210
+          },
+          "casse": {
+            "opening": 60,
+            "ceiling": 120
+          }
+        }
+      }
+    }
+  }
+}
