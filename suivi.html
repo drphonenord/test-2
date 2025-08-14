@@ -1,89 +1,134 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Admin — Suivi réparations</title>
-  <link rel="stylesheet" href="/admin/style.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Suivi réparation — Dr Phone</title>
+  <meta name="description" content="Consultez l'état de votre réparation avec votre code DRP.">
+  <style>
+    :root{--fg:#0b1220;--muted:#6b7280;--border:#e5e7eb;--brand:#2563eb;--brand2:#06b6d4;--bg:#f8fafc}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--fg);background:var(--bg)}
+    .container{max-width:860px;margin:0 auto;padding:24px 16px}
+    .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-top:16px}
+    h1{margin:0 0 8px} .muted{color:var(--muted)}
+    input{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;font-size:16px}
+    button{border:1px solid var(--brand);background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer}
+    .row{display:grid;grid-template-columns:1fr auto;gap:12px;margin-top:8px}
+    .status{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#f9fafb;font-weight:700}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:640px){.grid{grid-template-columns:1fr}}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe}
+    .small{font-size:.92rem}
+    a.btn{display:inline-block;text-decoration:none}
+  </style>
 </head>
 <body>
-<div class="container">
-  <h1>Admin — Suivi réparations</h1>
-  <p class="muted small">Donne un code au client. Il suit l’état ici : <a href="/suivi.html">/suivi.html</a>.</p>
+  <div class="container">
+    <h1>Suivi réparation</h1>
+    <p class="muted">Entrez votre code (ex. <span class="pill">DRP-2025-123</span>) ou scannez le QR reçu en boutique.</p>
 
-  <div class="card grid g2">
-    <div>
-      <label>Clé admin (une fois pour toutes)</label>
-      <input id="adm_token" placeholder="ADMIN_TOKEN"/>
-      <button class="btn out" id="btnSaveToken">Enregistrer</button>
+    <div class="card">
+      <div class="row">
+        <input id="code" placeholder="DRP-AAAA-XXX" aria-label="Code de suivi" />
+        <button id="btn">Suivre</button>
+      </div>
+      <div id="state" class="muted" style="margin-top:8px"></div>
     </div>
-    <div>
-      <label>Charger un ticket par code</label>
-      <div class="grid g2">
-        <input id="load_code" placeholder="DRP-2025-123"/>
-        <div class="toolbar">
-          <button class="btn" id="btnLoad">Charger</button>
-          <button class="btn out" id="btnOpen">Tous (ouverts)</button>
-          <button class="btn out" id="btnLast">Derniers (100)</button>
+
+    <div id="result" class="card" style="display:none">
+      <div class="grid">
+        <div>
+          <div class="muted small">Code</div>
+          <div id="res_code" class="pill" style="margin-top:4px"></div>
+        </div>
+        <div>
+          <div class="muted small">Statut</div>
+          <div id="res_status" class="status" style="margin-top:4px"></div>
         </div>
       </div>
+      <div class="grid" style="margin-top:10px">
+        <div>
+          <div class="muted small">Modèle</div>
+          <div id="res_model" style="margin-top:4px">—</div>
+        </div>
+        <div>
+          <div class="muted small">Client</div>
+          <div id="res_client" style="margin-top:4px">—</div>
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <div class="muted small">Note</div>
+        <div id="res_note" style="margin-top:4px">—</div>
+      </div>
+      <div style="margin-top:12px">
+        <a id="link" class="btn" href="#" target="_blank">Ouvrir ce suivi dans un nouvel onglet</a>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="grid g2" style="align-items:end">
-      <div>
-        <label>Recherche (code, nom, modèle, statut)</label>
-        <input id="q" placeholder="Ex: Martin, iPhone 13, DRP-2025..."/>
-      </div>
-      <div class="toolbar">
-        <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="onlyOpen" checked/> Uniquement ouverts</label>
-        <button class="btn" id="btnSearch">Rechercher</button>
-      </div>
-    </div>
-    <div id="results" class="small muted" style="margin-top:8px"></div>
-  </div>
+  <script>
+    const FN='/.netlify/functions/tickets';
+    const $=id=>document.getElementById(id);
 
-  <div class="card">
-    <div class="grid g2">
-      <div>
-        <label>Code (laisser vide pour auto)</label>
-        <input id="f_code" placeholder="DRP-2025-123"/>
-      </div>
-      <div>
-        <label>Statut</label>
-        <select id="f_status">
-          <option>Réceptionné</option>
-          <option>Diagnostique</option>
-          <option>En cours</option>
-          <option>En attente</option>
-          <option>Terminé</option>
-          <option>Livré</option>
-        </select>
-      </div>
-      <div>
-        <label>Modèle</label>
-        <input id="f_model" placeholder="iPhone 13"/>
-      </div>
-      <div>
-        <label>Client</label>
-        <input id="f_client" placeholder="Nom / Initiales (ex. L. Martin)"/>
-      </div>
-    </div>
-    <label>Note</label>
-    <textarea id="f_note" placeholder="Détails utiles..."></textarea>
-    <div class="toolbar" style="margin-top:8px">
-      <button class="btn" id="btnSave">Enregistrer / Mettre à jour</button>
-      <button class="btn out" id="btnNewCode">Nouveau code (garde le client)</button>
-      <button class="btn out" id="btnLink">Lien suivi client</button>
-      <button class="btn out" id="btnPrint">Imprimer la fiche</button>
-      <span class="small muted right" id="msg"></span>
-    </div>
-  </div>
+    function normalize(raw){
+      let s=(raw||'').trim().toUpperCase();
+      s=s.replace(/[^A-Z0-9]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+      if(s.startsWith('DRP') && !s.startsWith('DRP-')) s='DRP-'+s.slice(3);
+      return s;
+    }
 
-  <div class="footer small muted">Stockage Netlify Blobs (`tickets`/`all`).</div>
+    async function run(){
+      const code=normalize($('code').value);
+      $('code').value=code;
+      if(!code){$('state').textContent='Entrez un code.';return;}
+      $('state').textContent='Recherche…'; $('result').style.display='none';
+      try{
+        const r=await fetch(FN+'?id='+encodeURIComponent(code));
+        if(!r.ok){$('state').textContent='Code introuvable. Vérifiez l’orthographe ou demandez en boutique.';return;}
+        const t=await r.json();
+        $('state').textContent=''; $('result').style.display='block';
+        $('res_code').textContent=t.code||code;
+        $('res_status').textContent=t.status||'—';
+        $('res_model').textContent=t.model||'—';
+        $('res_client').textContent=t.client||'—';
+        $('res_note').textContent=t.note||'—';
+        const link=location.origin+'/suivi.html#'+encodeURIComponent(t.code||code);
+        $('link').href=link;
+      }catch(e){$('state').textContent='Erreur réseau. Réessayez dans un instant.';}
+    }
+
+    $('btn').addEventListener('click',run);
+    $('code').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); run(); }});
+
+    // Auto-run avec #CODE
+    (function(){
+      const h=(location.hash||'').replace('#','').trim();
+      if(h){ $('code').value=h; run(); }
+    })();
+  </script>
+
+<div class="card" style="max-width:700px;margin:16px auto">
+  <h3>Suivi de réparation</h3>
+  <div class="grid" style="grid-template-columns:1fr 1fr; gap:8px">
+    <input id="t_id" placeholder="N° de ticket (ex: 1234)" />
+    <input id="t_phone" placeholder="Derniers 4 chiffres du téléphone" inputmode="numeric" />
+  </div>
+  <button class="btn" id="t_btn" style="margin-top:8px">Voir le statut</button>
+  <div id="t_res" class="muted" style="margin-top:8px"></div>
 </div>
+<script>
+document.getElementById('t_btn').onclick = async ()=>{
+  const id = document.getElementById('t_id').value.trim();
+  const phone = document.getElementById('t_phone').value.trim();
+  if(!id || !phone) return alert('Remplis les deux champs.');
+  const r = await fetch(`/.netlify/functions/track-ticket?id=${encodeURIComponent(id)}&phone=${encodeURIComponent(phone)}`);
+  const j = await r.json();
+  const box = document.getElementById('t_res');
+  if(!r.ok){ box.textContent = j.error==='not_found' ? 'Ticket introuvable.' : 'Erreur serveur.'; return; }
+  const t = j.ticket;
+  box.innerHTML = `<b>Statut :</b> ${t.status}<br><b>Appareil :</b> ${t.device}<br><b>Maj :</b> ${t.updated_at || '—'}${t.note?('<br><b>Note :</b> '+t.note):''}`;
+};
+</script>
 
-<script src="/admin/suivi.js"></script>
 </body>
 </html>
